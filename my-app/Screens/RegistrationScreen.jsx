@@ -1,6 +1,14 @@
 import { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { StyleSheet, Text, Button, Alert, View, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Button,
+  Alert,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
 export default function RegistrationScreen() {
   const [username, setUsername] = useState("");
@@ -44,11 +52,17 @@ export default function RegistrationScreen() {
           secureTextEntry
         />
 
-        <Button
+        <TouchableOpacity
           title="Sign Up"
           style={styles.registration_button}
           onPress={onLogin}
-        />
+        >
+          <Text style={styles.registration_btn_text}>Sign Up</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.registration_form_text}>
+          Do you have an account? SIgn In
+        </Text>
       </View>
     </View>
   );
@@ -56,23 +70,18 @@ export default function RegistrationScreen() {
 
 const styles = StyleSheet.create({
   registration_container: {
-    // flex: 1,
-    position: "relative",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    // height: 200,
     width: "100%",
     paddingTop: 92,
-    paddingHorizontal: 16,
-    paddingBottom: 40,
+    // paddingBottom: 45,
   },
   registration_avatar: {
     position: "absolute",
     top: 0,
     left: "50%",
-    marginLeft: -30,
-    marginTop: -60,
+    transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
     width: 120,
     height: 120,
     borderRadius: 16,
@@ -91,23 +100,38 @@ const styles = StyleSheet.create({
   },
   registration_form: {
     display: "flex",
-    // flex: 1,
     gap: 16,
-    // paddingBottom: 30,
+    paddingHorizontal: 16,
   },
   registration_input: {
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
     borderColor: "#E8E8E8",
-    borderRadius: 16,
+    borderRadius: 8,
     height: 50,
     paddingHorizontal: 16,
     fontWeight: "400",
     fontSize: 16,
   },
   registration_button: {
-    marginLeft: 16,
-    margineRight: 16,
-    backgroundColor: "orange",
+    marginTop: 43,
+    marginBottom: 16,
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+    height: 51,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  registration_btn_text: {
+    fontWeight: "400",
+    fontSize: 16,
+    color: "white",
+  },
+  registration_form_text: {
+    fontWeight: "400",
+    fontSize: 16,
+    textAlign: "center",
+    color: "#1b4371",
   },
 });
