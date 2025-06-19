@@ -1,3 +1,8 @@
+import "react-native-gesture-handler";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
 import {
   StyleSheet,
   ImageBackground,
@@ -9,6 +14,9 @@ import {
 
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
+import PostsScreen from "./Screens/PostsScreen";
+
+const MainStack = createStackNavigator();
 
 export default function App() {
   return (
@@ -22,7 +30,17 @@ export default function App() {
           style={styles.background}
           source={require("./assets/images/photo-BG.jpg")}
         >
-          <RegistrationScreen />
+          <NavigationContainer>
+            <MainStack.Navigator initialRouteName="Registration">
+              <MainStack.Screen
+                name={"Registration"}
+                component={RegistrationScreen}
+              />
+              <MainStack.Screen name={"Login"} component={LoginScreen} />
+              <MainStack.Screen name={"Posts"} component={PostsScreen} />
+            </MainStack.Navigator>
+          </NavigationContainer>
+          {/* <RegistrationScreen /> */}
           {/* <LoginScreen /> */}
         </ImageBackground>
       </KeyboardAvoidingView>
