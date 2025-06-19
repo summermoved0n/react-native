@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { launchImageLibrary } from "react-native-image-picker";
+
 import AntDesign from "@expo/vector-icons/AntDesign";
 import {
   StyleSheet,
@@ -18,6 +20,23 @@ export default function RegistrationScreen() {
   const [emailFocus, setEmailFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
 
+  const [isSecurePassword, setIsSecurePassword] = useState(true);
+
+  const openGallery = () => {
+    launchImageLibrary(
+      {
+        mediaType: "photo",
+      },
+      (response) => {
+        if (response.didCancel) return;
+        if (response.assets && response.assets.length > 0) {
+          const file = response.assets[0];
+          console.log("File selected:", file);
+        }
+      }
+    );
+  };
+
   const onLogin = () => {
     Alert.alert("Credentials", `${username} + ${email}`);
   };
@@ -25,9 +44,12 @@ export default function RegistrationScreen() {
   return (
     <View style={styles.registration_container}>
       <View style={styles.registration_avatar}>
-        <View style={styles.registration_icon}>
+        <TouchableOpacity
+          onPress={openGallery}
+          style={styles.registration_icon}
+        >
           <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
-        </View>
+        </TouchableOpacity>
       </View>
 
       <Text style={styles.registration_header}>Registration</Text>
@@ -73,10 +95,14 @@ export default function RegistrationScreen() {
             placeholderTextColor="#bdbdbd"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={isSecurePassword}
           />
-          <TouchableOpacity style={styles.registration_show_btn}>
-            <Text>Show</Text>
+          <TouchableOpacity
+            style={styles.registration_show_btn}
+            onPressIn={() => setIsSecurePassword(false)}
+            onPressOut={() => setIsSecurePassword(true)}
+          >
+            <Text style={styles.registration_show_text}>Show</Text>
           </TouchableOpacity>
         </View>
 
@@ -84,9 +110,11 @@ export default function RegistrationScreen() {
           <Text style={styles.registration_btn_text}>Sign Up</Text>
         </TouchableOpacity>
 
-        <Text style={styles.registration_form_text}>
-          Do you have an account? Sign In
-        </Text>
+        <TouchableOpacity>
+          <Text style={styles.registration_form_text}>
+            Do you have an account? Sign In
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -95,11 +123,11 @@ export default function RegistrationScreen() {
 const styles = StyleSheet.create({
   registration_container: {
     backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     width: "100%",
     paddingTop: 92,
-    paddingBottom: 45,
+    paddingBottom: 78,
   },
   registration_avatar: {
     position: "absolute",
@@ -168,5 +196,10 @@ const styles = StyleSheet.create({
     right: 16,
     bottom: "50%",
     transform: [{ translateY: "50%" }],
+  },
+  registration_show_text: {
+    fontWeight: "400",
+    fontSize: 16,
+    color: "#1b4371",
   },
 });
