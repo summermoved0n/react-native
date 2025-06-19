@@ -3,7 +3,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import {
   StyleSheet,
   Text,
-  Button,
   Alert,
   View,
   TextInput,
@@ -14,6 +13,10 @@ export default function RegistrationScreen() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [usernameFocus, setUsernameFocus] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
 
   const onLogin = () => {
     Alert.alert("Credentials", `${username} + ${email}`);
@@ -31,37 +34,58 @@ export default function RegistrationScreen() {
 
       <View style={styles.registration_form}>
         <TextInput
-          style={styles.registration_input}
+          onFocus={() => {
+            setUsernameFocus(true);
+          }}
+          onBlur={() => setUsernameFocus(false)}
+          style={[
+            styles.registration_input,
+            usernameFocus && styles.registration_inputFocused,
+          ]}
           placeholder="Username"
+          placeholderTextColor="#bdbdbd"
           value={username}
           onChangeText={setUsername}
         />
 
         <TextInput
-          style={styles.registration_input}
+          onFocus={() => setEmailFocus(true)}
+          onBlur={() => setEmailFocus(false)}
+          style={[
+            styles.registration_input,
+            emailFocus && styles.registration_inputFocused,
+          ]}
           placeholder="Email"
+          placeholderTextColor="#bdbdbd"
           value={email}
           onChangeText={setEmail}
         />
 
-        <TextInput
-          style={styles.registration_input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        <View>
+          <TextInput
+            onFocus={() => setPasswordFocus(true)}
+            onBlur={() => setPasswordFocus(false)}
+            style={[
+              styles.registration_input,
+              passwordFocus && styles.registration_inputFocused,
+            ]}
+            placeholder="Password"
+            placeholderTextColor="#bdbdbd"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <TouchableOpacity style={styles.registration_show_btn}>
+            <Text>Show</Text>
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity
-          title="Sign Up"
-          style={styles.registration_button}
-          onPress={onLogin}
-        >
+        <TouchableOpacity style={styles.registration_button} onPress={onLogin}>
           <Text style={styles.registration_btn_text}>Sign Up</Text>
         </TouchableOpacity>
 
         <Text style={styles.registration_form_text}>
-          Do you have an account? SIgn In
+          Do you have an account? Sign In
         </Text>
       </View>
     </View>
@@ -75,7 +99,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 16,
     width: "100%",
     paddingTop: 92,
-    // paddingBottom: 45,
+    paddingBottom: 45,
   },
   registration_avatar: {
     position: "absolute",
@@ -112,6 +136,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontWeight: "400",
     fontSize: 16,
+    color: "#212121",
+  },
+  registration_inputFocused: {
+    borderColor: "#FF6C00",
+    backgroundColor: "transparent",
   },
   registration_button: {
     marginTop: 43,
@@ -133,5 +162,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     color: "#1b4371",
+  },
+  registration_show_btn: {
+    position: "absolute",
+    right: 16,
+    bottom: "50%",
+    transform: [{ translateY: "50%" }],
   },
 });
