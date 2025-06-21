@@ -1,17 +1,25 @@
 import { useState } from "react";
 import { launchImageLibrary } from "react-native-image-picker";
+import { useNavigation } from "@react-navigation/native";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import {
   StyleSheet,
   Text,
   Alert,
+  ImageBackground,
   View,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 export default function RegistrationScreen() {
+  const navigation = useNavigation();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,85 +50,106 @@ export default function RegistrationScreen() {
   };
 
   return (
-    <View style={styles.registration_container}>
-      <View style={styles.registration_avatar}>
-        <TouchableOpacity
-          onPress={openGallery}
-          style={styles.registration_icon}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -180}
+        style={styles.container}
+      >
+        <ImageBackground
+          style={styles.background}
+          source={require("../assets/images/photo-BG.jpg")}
         >
-          <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
-        </TouchableOpacity>
-      </View>
+          <View style={styles.registration_container}>
+            <View style={styles.registration_avatar}>
+              <TouchableOpacity
+                onPress={openGallery}
+                style={styles.registration_icon}
+              >
+                <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+              </TouchableOpacity>
+            </View>
 
-      <Text style={styles.registration_header}>Registration</Text>
+            <Text style={styles.registration_header}>Registration</Text>
 
-      <View style={styles.registration_form}>
-        <TextInput
-          onFocus={() => {
-            setUsernameFocus(true);
-          }}
-          onBlur={() => setUsernameFocus(false)}
-          style={[
-            styles.registration_input,
-            usernameFocus && styles.registration_inputFocused,
-          ]}
-          placeholder="Username"
-          placeholderTextColor="#bdbdbd"
-          value={username}
-          onChangeText={setUsername}
-        />
+            <View style={styles.registration_form}>
+              <TextInput
+                onFocus={() => {
+                  setUsernameFocus(true);
+                }}
+                onBlur={() => setUsernameFocus(false)}
+                style={[
+                  styles.registration_input,
+                  usernameFocus && styles.registration_inputFocused,
+                ]}
+                placeholder="Username"
+                placeholderTextColor="#bdbdbd"
+                value={username}
+                onChangeText={setUsername}
+              />
 
-        <TextInput
-          onFocus={() => setEmailFocus(true)}
-          onBlur={() => setEmailFocus(false)}
-          style={[
-            styles.registration_input,
-            emailFocus && styles.registration_inputFocused,
-          ]}
-          placeholder="Email"
-          placeholderTextColor="#bdbdbd"
-          value={email}
-          onChangeText={setEmail}
-        />
+              <TextInput
+                onFocus={() => setEmailFocus(true)}
+                onBlur={() => setEmailFocus(false)}
+                style={[
+                  styles.registration_input,
+                  emailFocus && styles.registration_inputFocused,
+                ]}
+                placeholder="Email"
+                placeholderTextColor="#bdbdbd"
+                value={email}
+                onChangeText={setEmail}
+              />
 
-        <View>
-          <TextInput
-            onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
-            style={[
-              styles.registration_input,
-              passwordFocus && styles.registration_inputFocused,
-            ]}
-            placeholder="Password"
-            placeholderTextColor="#bdbdbd"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={isSecurePassword}
-          />
-          <TouchableOpacity
-            style={styles.registration_show_btn}
-            onPressIn={() => setIsSecurePassword(false)}
-            onPressOut={() => setIsSecurePassword(true)}
-          >
-            <Text style={styles.registration_show_text}>Show</Text>
-          </TouchableOpacity>
-        </View>
+              <View>
+                <TextInput
+                  onFocus={() => setPasswordFocus(true)}
+                  onBlur={() => setPasswordFocus(false)}
+                  style={[
+                    styles.registration_input,
+                    passwordFocus && styles.registration_inputFocused,
+                  ]}
+                  placeholder="Password"
+                  placeholderTextColor="#bdbdbd"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={isSecurePassword}
+                />
+                <TouchableOpacity
+                  style={styles.registration_show_btn}
+                  onPressIn={() => setIsSecurePassword(false)}
+                  onPressOut={() => setIsSecurePassword(true)}
+                >
+                  <Text style={styles.registration_show_text}>Show</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-        <TouchableOpacity style={styles.registration_button} onPress={onLogin}>
-          <Text style={styles.registration_btn_text}>Sign Up</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.registration_button}
+              onPress={onLogin}
+            >
+              <Text style={styles.registration_btn_text}>Sign Up</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Text style={styles.registration_form_text}>
-            Do you have an account? Sign In
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.registration_form_text}>
+                Do you have an account? Sign In
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "flex-end",
+  },
   registration_container: {
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 25,
@@ -173,6 +202,7 @@ const styles = StyleSheet.create({
   registration_button: {
     marginTop: 43,
     marginBottom: 16,
+    marginHorizontal: 16,
     backgroundColor: "#FF6C00",
     borderRadius: 100,
     height: 51,

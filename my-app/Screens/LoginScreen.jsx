@@ -1,15 +1,23 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   StyleSheet,
   Text,
   Alert,
+  ImageBackground,
   View,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 export default function LoginScreen() {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState("");
   const [emailFocus, setEmailFocus] = useState(false);
 
@@ -23,58 +31,81 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.login_container}>
-      <Text style={styles.login_title}>Log In</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -240}
+        style={styles.container}
+      >
+        <ImageBackground
+          style={styles.background}
+          source={require("../assets/images/photo-BG.jpg")}
+        >
+          <View style={styles.login_container}>
+            <Text style={styles.login_title}>Log In</Text>
 
-      <View style={styles.login_form}>
-        <TextInput
-          onFocus={() => setEmailFocus(true)}
-          onBlur={() => setEmailFocus(false)}
-          style={[styles.login_input, emailFocus && styles.login_inputFocused]}
-          placeholder="Email"
-          placeholderTextColor="#bdbdbd"
-          value={email}
-          onChangeText={setEmail}
-        />
+            <View style={styles.login_form}>
+              <TextInput
+                onFocus={() => setEmailFocus(true)}
+                onBlur={() => setEmailFocus(false)}
+                style={[
+                  styles.login_input,
+                  emailFocus && styles.login_inputFocused,
+                ]}
+                placeholder="Email"
+                placeholderTextColor="#bdbdbd"
+                value={email}
+                onChangeText={setEmail}
+              />
 
-        <View>
-          <TextInput
-            onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
-            style={[
-              styles.login_input,
-              passwordFocus && styles.login_inputFocused,
-            ]}
-            placeholder="Password"
-            placeholderTextColor="#bdbdbd"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={isSecurePassword}
-          />
-          <TouchableOpacity
-            style={styles.login_show_btn}
-            onPressIn={() => setIsSecurePassword(false)}
-            onPressOut={() => setIsSecurePassword(true)}
-          >
-            <Text style={styles.login_show_text}>Show</Text>
-          </TouchableOpacity>
-        </View>
+              <View>
+                <TextInput
+                  onFocus={() => setPasswordFocus(true)}
+                  onBlur={() => setPasswordFocus(false)}
+                  style={[
+                    styles.login_input,
+                    passwordFocus && styles.login_inputFocused,
+                  ]}
+                  placeholder="Password"
+                  placeholderTextColor="#bdbdbd"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={isSecurePassword}
+                />
+                <TouchableOpacity
+                  style={styles.login_show_btn}
+                  onPressIn={() => setIsSecurePassword(false)}
+                  onPressOut={() => setIsSecurePassword(true)}
+                >
+                  <Text style={styles.login_show_text}>Show</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-        <TouchableOpacity style={styles.login_button} onPress={onLogin}>
-          <Text style={styles.login_btn_text}>Sign In</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.login_button} onPress={onLogin}>
+              <Text style={styles.login_btn_text}>Sign In</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Text style={styles.login_form_text}>
-            Do you not have an account? Registration
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Registration")}
+            >
+              <Text style={styles.login_form_text}>
+                Do you not have an account? Registration
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "flex-end",
+  },
   login_container: {
     backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
@@ -113,6 +144,7 @@ const styles = StyleSheet.create({
   login_button: {
     marginTop: 43,
     marginBottom: 16,
+    marginHorizontal: 16,
     backgroundColor: "#FF6C00",
     borderRadius: 100,
     height: 51,
