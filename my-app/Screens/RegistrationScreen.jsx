@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { launchImageLibrary } from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   Alert,
+  Image,
   ImageBackground,
   View,
   TextInput,
@@ -30,19 +31,25 @@ export default function RegistrationScreen() {
 
   const [isSecurePassword, setIsSecurePassword] = useState(true);
 
-  const openGallery = () => {
-    launchImageLibrary(
-      {
-        mediaType: "photo",
-      },
-      (response) => {
-        if (response.didCancel) return;
-        if (response.assets && response.assets.length > 0) {
-          const file = response.assets[0];
-          console.log("File selected:", file);
-        }
-      }
-    );
+  const [imageUri, setImageUri] = useState(null);
+
+  const openGallery = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission denied", "We need access to your gallery");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const file = result.assets[0];
+      setImageUri(file.uri);
+    }
   };
 
   const onLogin = () => {
@@ -61,14 +68,57 @@ export default function RegistrationScreen() {
           source={require("../assets/images/photo-BG.jpg")}
         >
           <View style={styles.registration_container}>
-            <View style={styles.registration_avatar}>
-              <TouchableOpacity
-                onPress={openGallery}
-                style={styles.registration_icon}
+            {!imageUri ? (
+              <View style={styles.registration_avatar}>
+                <TouchableOpacity
+                  onPress={openGallery}
+                  style={styles.registration_icon}
+                >
+                  <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: "50%",
+                  transform: [{ translateX: -60 }, { translateY: -60 }],
+                }}
               >
-                <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
-              </TouchableOpacity>
-            </View>
+                <View
+                  style={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: 16,
+                    overflow: "hidden",
+                  }}
+                >
+                  <ImageBackground
+                    source={{ uri: imageUri }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                    }}
+                  />
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => setImageUri(null)}
+                  style={{
+                    position: "absolute",
+                    bottom: 14,
+                    right: -12.5,
+                    backgroundColor: "#fff",
+                    borderRadius: 15,
+                    zIndex: 10,
+                  }}
+                >
+                  <AntDesign name="closecircleo" size={25} color="#bdbdbd" />
+                </TouchableOpacity>
+              </View>
+            )}
 
             <Text style={styles.registration_header}>Registration</Text>
 
