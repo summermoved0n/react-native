@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Text,
   Alert,
-  Image,
   ImageBackground,
   View,
   TextInput,
@@ -41,7 +40,7 @@ export default function RegistrationScreen() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaType.Images,
       allowsEditing: true,
       quality: 1,
     });
@@ -52,8 +51,31 @@ export default function RegistrationScreen() {
     }
   };
 
-  const onLogin = () => {
-    Alert.alert("Credentials", `${username} + ${email}`);
+  const onRegistration = () => {
+    const usernameTrim = username.trim();
+    if (usernameTrim.length < 3 || usernameTrim.length > 20) {
+      return Alert.alert(
+        "Username must be more than 3 and less than 20 letters🙄"
+      );
+    }
+
+    const emailTrim = email.trim();
+    if (!emailTrim.includes("@") && !emailTrim.includes(".com")) {
+      return Alert.alert("Email is not valid. @ and .com are required!");
+    }
+
+    const passwordTrim = password.trim();
+    if (passwordTrim.length < 3 || passwordTrim.length > 20) {
+      return Alert.alert(
+        "Username must be more than 3 and less than 20 letters🙄"
+      );
+    }
+
+    navigation.navigate("Posts", {
+      username: usernameTrim,
+      email: emailTrim,
+      imageUri,
+    });
   };
 
   return (
@@ -146,6 +168,9 @@ export default function RegistrationScreen() {
                   emailFocus && styles.registration_inputFocused,
                 ]}
                 placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
                 placeholderTextColor="#bdbdbd"
                 value={email}
                 onChangeText={setEmail}
@@ -177,7 +202,7 @@ export default function RegistrationScreen() {
 
             <TouchableOpacity
               style={styles.registration_button}
-              onPress={onLogin}
+              onPress={onRegistration}
             >
               <Text style={styles.registration_btn_text}>Sign Up</Text>
             </TouchableOpacity>

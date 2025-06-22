@@ -1,5 +1,7 @@
 import "react-native-gesture-handler";
 
+import { Button } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -25,7 +27,27 @@ export default function App() {
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <MainStack.Screen name={"Posts"} component={PostsScreen} />
+        <MainStack.Screen
+          name={"Posts"}
+          component={PostsScreen}
+          options={{
+            headerTitleAlign: "center",
+            headerTintColor: "#212121",
+            headerTitleStyle: {
+              // textAlign: "center",
+              fontWeight: "500",
+              fontSize: 17,
+            },
+            headerLeft: () => null,
+            headerRight: () => (
+              <Button
+                onPress={() => alert("This is a button!")}
+                title="Press me"
+                color="#fff"
+              />
+            ),
+          }}
+        />
       </MainStack.Navigator>
     </NavigationContainer>
   );
