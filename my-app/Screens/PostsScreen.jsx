@@ -1,73 +1,95 @@
-import { useState } from "react";
-import * as ImagePicker from "expo-image-picker";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { View, StyleSheet } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import AntDesign from "@expo/vector-icons/AntDesign";
-import {
-  StyleSheet,
-  Text,
-  Alert,
-  ImageBackground,
-  View,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import Feather from "@expo/vector-icons/Feather";
 
-export default function PostsScreen() {
-  const {
-    params: { username, email, imageUri },
-  } = useRoute();
+import ProfilePage from "../components/ProfilePage";
+import UserPage from "../components/UserPage";
 
+function Profile() {
   return (
-    <View
-      style={{
-        paddingTop: 32,
-        paddingHorizontal: 16,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#fff",
-      }}
-    >
-      <View style={{ display: "flex", flexDirection: "row", gap: 8 }}>
-        {!imageUri ? (
-          <View
-            style={{
-              width: 60,
-              height: 60,
-              borderRadius: 16,
-              backgroundColor: "#f6f6f6",
-            }}
-          ></View>
-        ) : (
-          <ImageBackground
-            style={{
-              width: 60,
-              height: 60,
-              borderRadius: 16,
-              overflow: "hidden",
-            }}
-            source={{ uri: imageUri }}
-          ></ImageBackground>
-        )}
-        <View style={{ display: "flex", justifyContent: "center" }}>
-          <Text style={{ fontWeight: "700", fontSize: 13, color: "#212121" }}>
-            {username}
-          </Text>
-          <Text
-            style={{
-              fontWeight: "400",
-              fontSize: 11,
-              color: "rgba(33, 33, 33, 0.8)",
-            }}
-          >
-            {email}
-          </Text>
-        </View>
-      </View>
+    <View style={styles.container}>
+      <ProfilePage/>
     </View>
   );
 }
+
+function User() {
+  return (
+    <View style={styles.container}>
+      <UserPage/>
+    </View>
+  );
+}
+
+const Tabs = createBottomTabNavigator();
+
+const Posts = () => {
+  return (
+    <Tabs.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused }) => {
+          let iconName;
+
+          if (route.name === "User") {
+            iconName = focused ? "user" : "user";
+          } else if (route.name === "Profile") {
+            iconName = focused ? "plus-a" : "plus-a";
+          }
+
+          return (
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: focused ? "#ff6c00" : "transparent",
+                width: 70,
+                height: 40,
+                borderRadius: 20,
+              }}
+            >
+              {route.name === "Profile" ? (
+                <Fontisto
+                  name={iconName}
+                  size={focused ? 13 : 24}
+                  color={focused ? "#fff" : "#bdbdbd"}
+                />
+              ) : (
+                <Feather
+                  name={iconName}
+                  size={focused ? 13 : 24}
+                  color={focused ? "#fff" : "#bdbdbd"}
+                />
+              )}
+            </View>
+          );
+        },
+
+        tabBarActiveTintColor: "#fff",
+        tabBarInactiveTintColor: "#212121",
+        tabBarStyle: {
+          backgroundColor: "#fff",
+          paddingTop: 10,
+        },
+        headerShown: false,
+        tabBarShowLabel: false,
+      })}
+    >
+      <Tabs.Screen name="Profile" component={Profile} />
+      <Tabs.Screen name="User" component={User} />
+    </Tabs.Navigator>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+});
+
+export default Posts;
