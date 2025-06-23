@@ -9,10 +9,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import PostsScreen from "./Screens/PostsScreen";
+import { useDispatch } from "react-redux";
 
 const MainStack = createStackNavigator();
 
 export default function AppNavigation() {
+  const dispatch = useDispatch()
   return (
     <NavigationContainer>
       <MainStack.Navigator initialRouteName="Registration">

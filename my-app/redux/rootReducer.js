@@ -3,12 +3,10 @@ import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 // import { getAdvertsThunk } from "./advertsOperations";
 
 const initialState = {
-  users: {
-    name: "",
-    email: "",
-    avatar: null,
-    posts: [],
-  },
+  name: "",
+  email: "",
+  avatar: null,
+  posts: [],
 };
 
 const usersSlice = createSlice({
@@ -16,7 +14,16 @@ const usersSlice = createSlice({
   initialState,
   reducers: {
     setUserName(state, { payload }) {
+      console.log("root", payload);
       state.users.name = payload;
+    },
+    setUserEmail(state, { payload }) {
+      console.log("root", payload);
+      state.users.email = payload;
+    },
+    setUserAvatar(state, { payload }) {
+      console.log("root", payload);
+      state.users.avatar = payload;
     },
   },
   extraReducers: (builder) => builder,
@@ -34,6 +41,6 @@ const usersSlice = createSlice({
   // }),
 });
 
-export const {} = usersSlice.actions;
+export const { setUserName, setUserEmail, setUserAvatar } = usersSlice.actions;
 
 export const rootReducer = usersSlice.reducer;

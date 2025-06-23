@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { rootReducer } from "./rootReducer";
 
 const authConfig = {
-  key: "root",
+  key: "users",
   storage: AsyncStorage,
 };
 

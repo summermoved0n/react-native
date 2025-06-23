@@ -1,6 +1,8 @@
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { setUserAvatar, setUserEmail, setUserName } from "../redux/rootReducer";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import {
@@ -18,6 +20,7 @@ import {
 } from "react-native";
 
 export default function RegistrationScreen() {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const [username, setUsername] = useState("");
@@ -60,22 +63,26 @@ export default function RegistrationScreen() {
     }
 
     const emailTrim = email.trim();
-    if (!emailTrim.includes("@") && !emailTrim.includes(".com")) {
-      return Alert.alert("Email is not valid. @ and .com are required!");
+    if (!emailTrim.includes("@") || !emailTrim.includes(".com")) {
+      return Alert.alert(
+        `Email is not valid. '@' is required! '.com' is required!`
+      );
     }
 
     const passwordTrim = password.trim();
     if (passwordTrim.length < 3 || passwordTrim.length > 20) {
       return Alert.alert(
-        "Username must be more than 3 and less than 20 letters🙄"
+        "Password must be more than 3 and less than 20 letters🙄"
       );
     }
 
-    navigation.navigate("Posts", {
-      username: usernameTrim,
-      email: emailTrim,
-      imageUri,
-    });
+    dispatch(
+      setUserName(usernameTrim),
+      setUserEmail(emailTrim),
+      setUserAvatar(imageUri)
+    );
+
+    navigation.navigate("Posts");
   };
 
   return (
