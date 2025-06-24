@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setUserAvatar, setUserEmail, setUserName } from "../redux/rootReducer";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -76,11 +77,11 @@ export default function RegistrationScreen() {
       );
     }
 
-    dispatch(
-      setUserName(usernameTrim),
-      setUserEmail(emailTrim),
-      setUserAvatar(imageUri)
-    );
+    // dispatch(
+    //   setUserName(usernameTrim),
+    //   setUserEmail(emailTrim),
+    //   setUserAvatar(imageUri)
+    // );
 
     navigation.navigate("Posts");
   };

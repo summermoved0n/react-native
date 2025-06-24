@@ -9,7 +9,7 @@ import AppNavigation from "./AppNavigation";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    "Roboto": require("./assets/fonts/Roboto-VariableFont_wdth,wght.ttf"),
+    Roboto: require("./assets/fonts/Roboto-VariableFont_wdth,wght.ttf"),
   });
 
   if (!fontsLoaded) {
